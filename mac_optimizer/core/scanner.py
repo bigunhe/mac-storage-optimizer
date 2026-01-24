@@ -1,6 +1,4 @@
 """File system scanning for Mac-Storage-Optimizer.
-
-Skeleton only; implement traversal and metadata extraction later.
 """
 
 from pathlib import Path
@@ -50,8 +48,8 @@ class FileScanner:
         - Do not treat nested files as repositories; only directories.
         - Should be robust against symlinks and permissions errors.
         """
-
-        pass
+        # Check if the .git folder exists inside this path
+        return (path / ".git").is_dir()
 
     def get_file_metadata(self, file_path: Path) -> dict[str, object]:
         """Gather metadata needed for rules and actions.
@@ -64,3 +62,24 @@ class FileScanner:
         """
 
         pass
+
+
+
+# --- MANUAL TEST BENCH ---
+if __name__ == "__main__":
+    my_scanner = FileScanner()
+    test_path = Path("/Users/bigunhettiarachchi/Downloads") 
+    
+    print(f"Testing scanner on: {test_path}")
+    
+    found_files = my_scanner.scan_directory(test_path)
+    
+    print(f"\n--- Result: Found {len(found_files)} items ---")
+    for path in found_files:
+        # Print a tag so you know WHY it was picked
+        if (path / ".git").is_dir():
+            print(f"[CODING - PROJECT] {path.name}")
+        else:
+            print(f"[FILE]    {path.name}")
+
+    #  --- to run the test, run -> python3 src/scanner.py
