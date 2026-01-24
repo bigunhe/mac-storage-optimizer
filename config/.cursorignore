@@ -1,0 +1,16 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Staging / review folders
+_TO_ARCHIVE_REVIEW/
+_TO_DELETE_REVIEW/
+~/Staging_Area/
+*_REVIEW/
+
+# Large/binary media
+*.mp4
+*.zip
