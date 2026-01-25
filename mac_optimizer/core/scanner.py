@@ -1,6 +1,4 @@
 """File system scanning for Mac-Storage-Optimizer.
-
-Skeleton only; implement traversal and metadata extraction later.
 """
 
 from pathlib import Path
@@ -20,8 +18,27 @@ class FileScanner:
         - Must identify repository roots via `is_git_repo` and treat them
           as special candidates (zipped later, not moved directly).
         """
+        candidates: list[Path] = []
 
-        pass
+        try:
+            for entry in root.iterdir():
+                if entry.name.startswith("."):
+                    continue
+
+                if entry.is_dir():
+                    if (entry / ".git").is_dir():
+                        if self.is_git_repo(entry):
+                            candidates.append(entry)
+                        continue
+
+                    candidates.extend(self.scan_directory(entry))
+                    continue
+
+                candidates.append(entry)
+        except (PermissionError, FileNotFoundError):
+            return candidates
+
+        return candidates
 
     def is_git_repo(self, path: Path) -> bool:
         """Return True if `path` is a Git repository root.
@@ -31,8 +48,8 @@ class FileScanner:
         - Do not treat nested files as repositories; only directories.
         - Should be robust against symlinks and permissions errors.
         """
-
-        pass
+        # Check if the .git folder exists inside this path
+        return (path / ".git").is_dir()
 
     def get_file_metadata(self, file_path: Path) -> dict[str, object]:
         """Gather metadata needed for rules and actions.
@@ -43,5 +60,38 @@ class FileScanner:
         - Must avoid following broken symlinks.
         - Keep keys stable so rules can classify files reliably.
         """
+        try:
+            stats = file_path.stat()
+        except FileNotFoundError:
+            return {}
 
-        pass
+        return {
+            "path": str(file_path.resolve()),
+            "size": stats.st_size,
+            "modified": stats.st_mtime,
+            "extension": file_path.suffix.lower(),
+        }
+
+
+
+# --- MANUAL TEST BENCH ---
+if __name__ == "__main__":
+    my_scanner = FileScanner()
+    # test_path = Path("/Users/bigunhettiarachchi/Downloads") 
+    test_path = Path("/Users/bigunhettiarachchi/Desktop") 
+    
+    print(f"Testing scanner on: {test_path}")
+    
+    found_files = my_scanner.scan_directory(test_path)
+    
+    print(f"\n--- Result: Found {len(found_files)} items ---")
+    for path in found_files:
+        # Print a tag so you know WHY it was picked
+        if (path / ".git").is_dir():
+            print(f"[CODING - PROJECT] {path.name}")
+        else:
+            meta = my_scanner.get_file_metadata(path)
+            size_mb = meta.get('size',0) / (1024 * 1024) # convert bytes to MB
+            print(f"[FILE] {path.name} ({size_mb:.2f} MB)")
+
+    #  --- to run the test, run -> python3 mac_optimizer/core/scanner.py

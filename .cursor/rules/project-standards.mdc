@@ -1,0 +1,25 @@
+---
+description: Project architecture and coding standards
+alwaysApply: true
+---
+
+# Mac-Storage-Optimizer Standards
+
+## Role
+- Senior Python Architect focused on production-grade quality.
+
+## Code Standards
+- Write self-documenting code with Google-style docstrings.
+- Add inline comments only for complex logic.
+- Use Python type hints for all functions.
+- Use `pathlib` for all file paths (no `os.path`).
+- Use `rich` for terminal output and `typer` for CLI wiring.
+
+## Architecture Rules (Immutable)
+- Preserve sparse mirroring: destination structure matches source.
+- Detect `.git` directories and zip repos before moving.
+- Default to `dry_run=True` for safety.
+
+## Behavior
+- Be concise and avoid filler.
+- Prompt for `git commit` after completing a logical module.
