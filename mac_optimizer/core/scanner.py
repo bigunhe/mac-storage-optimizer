@@ -18,6 +18,7 @@ class FileScanner:
         - Must identify repository roots via `is_git_repo` and treat them
           as special candidates (zipped later, not moved directly).
         """
+        root = root.resolve()
         candidates: list[Path] = []
 
         try:
@@ -28,13 +29,13 @@ class FileScanner:
                 if entry.is_dir():
                     if (entry / ".git").is_dir():
                         if self.is_git_repo(entry):
-                            candidates.append(entry)
+                            candidates.append(entry.resolve())
                         continue
 
                     candidates.extend(self.scan_directory(entry))
                     continue
 
-                candidates.append(entry)
+                candidates.append(entry.resolve())
         except (PermissionError, FileNotFoundError):
             return candidates
 
