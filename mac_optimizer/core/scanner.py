@@ -60,15 +60,25 @@ class FileScanner:
         - Must avoid following broken symlinks.
         - Keep keys stable so rules can classify files reliably.
         """
+        try:
+            stats = file_path.stat()
+        except FileNotFoundError:
+            return {}
 
-        pass
+        return {
+            "path": str(file_path.resolve()),
+            "size": stats.st_size,
+            "modified": stats.st_mtime,
+            "extension": file_path.suffix.lower(),
+        }
 
 
 
 # --- MANUAL TEST BENCH ---
 if __name__ == "__main__":
     my_scanner = FileScanner()
-    test_path = Path("/Users/bigunhettiarachchi/Downloads") 
+    # test_path = Path("/Users/bigunhettiarachchi/Downloads") 
+    test_path = Path("/Users/bigunhettiarachchi/Desktop") 
     
     print(f"Testing scanner on: {test_path}")
     
@@ -80,6 +90,8 @@ if __name__ == "__main__":
         if (path / ".git").is_dir():
             print(f"[CODING - PROJECT] {path.name}")
         else:
-            print(f"[FILE]    {path.name}")
+            meta = my_scanner.get_file_metadata(path)
+            size_mb = meta.get('size',0) / (1024 * 1024) # convert bytes to MB
+            print(f"[FILE] {path.name} ({size_mb:.2f} MB)")
 
-    #  --- to run the test, run -> python3 src/scanner.py
+    #  --- to run the test, run -> python3 mac_optimizer/core/scanner.py
