@@ -117,3 +117,55 @@ class FileMover:
 
         existing.extend(entries)
         self._log_path.write_text(json.dumps(existing, indent=2))
+
+
+# --- TEST BENCH ---
+
+if __name__ == "__main__":
+    
+    import os
+    
+    print("--- TESTING FILE MOVER ---")
+    
+    # 1. Create a dummy file to test with
+    test_file = Path.home() / "test_mover_dummy.txt"
+    test_file.write_text("This is a test file for Mac Optimizer.")
+    print(f"Created dummy file: {test_file}")
+    
+    # 2. Initialize Mover (It will create the staging folder)
+    mover = FileMover()
+    print(f"Staging Area: {mover.staging_path}")
+    
+    # 3. Test DRY RUN (Should NOT move)
+    print("\n--- TEST 1: DRY RUN ---")
+    files_to_move = [{"path": str(test_file)}]
+    result = mover.move_files(files_to_move, dry_run=True)
+    
+    if test_file.exists():
+        print(f"✅ Pass: File still exists at source (Dry Run worked).")
+    else:
+        print(f"❌ FAIL: File was moved during Dry Run!")
+
+    # 4. Test REAL MOVE
+    print("\n--- TEST 2: REAL MOVE ---")
+    result = mover.move_files(files_to_move, dry_run=False)
+    
+    if not test_file.exists():
+        print(f"✅ Pass: File moved successfully.")
+        print(f"   Log: {result}")
+    else:
+        print(f"❌ FAIL: File failed to move.")
+        print(f"   Errors: {result['errors']}")
+
+    # 5. Verify Staging
+    # Because of the 'Deep Nesting' logic, we need to calculate where it went
+    relative_path = test_file.relative_to(test_file.anchor)
+    staged_location = mover.staging_path / relative_path
+    
+    if staged_location.exists():
+        print(f"✅ Pass: File found in staging at: {staged_location}")
+        # Clean up the test file from staging
+        staged_location.unlink() 
+        print("   (Cleaned up staged test file)")
+    else:
+        print(f"❌ FAIL: Could not find file in staging!")
