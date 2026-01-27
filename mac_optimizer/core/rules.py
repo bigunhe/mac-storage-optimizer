@@ -65,6 +65,10 @@ class RuleEngine:
 
         return buckets
 
+    def organize(self, candidates: Iterable[dict[str, object]]) -> dict[str, list[dict[str, object]]]:
+        """Organize candidates into buckets (CLI-friendly alias)."""
+        return self.analyze_candidates(candidates)
+
     def _is_protected_path(self, path_str: str) -> bool:
         """Return True if the path is within a protected root."""
         normalized = Path(path_str).as_posix()

@@ -73,6 +73,20 @@ class FileScanner:
         }
 
 
+class Scanner:
+    """Public scanner interface for CLI usage."""
+
+    def __init__(self) -> None:
+        """Initialize the scanner adapter."""
+        self._scanner = FileScanner()
+
+    def scan(self, root: Path) -> list[dict[str, object]]:
+        """Scan a directory tree and return metadata dictionaries."""
+        candidates = self._scanner.scan_directory(root)
+        metadata = [self._scanner.get_file_metadata(path) for path in candidates]
+        return [item for item in metadata if item]
+
+
 
 # --- MANUAL TEST BENCH ---
 if __name__ == "__main__":
