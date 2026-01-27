@@ -1,0 +1,42 @@
+# --- Python System Junk ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Virtual Environments ---
+.venv/
+venv/
+ENV/
+
+# --- Operating System Files ---
+.DS_Store
+.DS_Store?
+._*
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# --- Project Specific: Staging & Test Areas ---
+# These are folders where files are moved/sorted.
+# We NEVER want to upload these contents to GitHub.
+Mac_Optimizer_Staging/
+Staging_Area/
+_TO_ARCHIVE_REVIEW/
+_TO_DELETE_REVIEW/
+*_REVIEW/
+
+# --- Large Media & Binary Files ---
+# Git is for code, not for storing movies or big zips.
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.zip
+*.tar.gz
+*.iso
+*.dmg
+
+# --- IDE & Editor Settings ---
+# (Optional) Hides settings from VS Code/Cursor so they don't sync.
+.vscode/
+.idea/
