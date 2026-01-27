@@ -114,3 +114,6 @@ def main() -> None:
             Prompt.ask("Press Enter to return to dashboard", default="")
     except KeyboardInterrupt:
         console.print("\n[yellow]Cancelled by user.[/yellow]")
+
+if __name__ == "__main__":
+    main()
