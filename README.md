@@ -47,17 +47,17 @@ mac-storage-optimizer/
 
 Evaluates file age against the current UTC timestamp:
 
-- 1_Year+: Modified > 365 days ago
+- ```1_Year+```: Modified > 365 days ago
 
-- 6_Months+: Modified > 180 days ago
+- ```6_Months+```: Modified > 180 days ago
 
-- 3_Months+: Modified > 90 days ago
+- ```3_Months+```: Modified > 90 days ago
 
-- 1_Month+: Modified > 30 days ago
+- ```1_Month+```: Modified > 30 days ago
 
-- 2_Weeks+: Modified > 14 days ago
+- ```2_Weeks+```: Modified > 14 days ago
 
-- Recent: Modified ≤ 14 days ago
+- ```Recent```: Modified ≤ 14 days ago
 
 Safety Filter: Discards any path located inside macOS protected roots (/System, /Applications, /Library).
 
